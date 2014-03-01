@@ -5,7 +5,7 @@ class BorgInit(object):
         pass
 
     @property
-    def _pass_retrieve(self):
+    def pass_retrieve(self):
         """
         Retrieves the password for Wikipedia bot."""
 

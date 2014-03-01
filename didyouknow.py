@@ -1,13 +1,14 @@
 from borg import BorgInit
 from wikitools.wiki import Wiki
 
-class DYK_Report(BorgInit):
+class DYKReport(BorgInit):
     """
     Wikipedia bot that notifies editors that their atricles
     have been nominated to be on the Did You Know section of
     the Main Page."""
     def __init__(self):
         self._site = Wiki() # Initiate Wiki instance.
+        super(DYKReport, self).__init__()
         
         user = "Cerabot"            # Retrieve vital login data
         passw = self.pass_retrieve  # for bot account.

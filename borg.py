@@ -1,6 +1,6 @@
 import sys
 
-class BorgInit(object)
+class BorgInit(object):
     def __init__(self):
         pass
 

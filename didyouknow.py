@@ -15,7 +15,7 @@ class DYKReport(BorgInit):
         super(DYKReport, self).__init__()
         
         user = "Cerabot"            # Retrieve vital login data
-        passw = self.pass_retrieve  # for bot account.
+        passw = self._pass_retrieve  # for bot account.
         
         self._site.login(user, passw) # Now login.
         

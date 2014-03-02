@@ -1,11 +1,15 @@
+import sys as Sysyem
 from borg import BorgInit
 from wikitools.wiki import Wiki
+from wikitools.page import Page
+import mwparserfromhell as Parser
 
 class DYKReport(BorgInit):
     """
     Wikipedia bot that notifies editors that their atricles
     have been nominated to be on the Did You Know section of
     the Main Page."""
+
     def __init__(self):
         self._site = Wiki() # Initiate Wiki instance.
         super(DYKReport, self).__init__()
@@ -16,6 +20,27 @@ class DYKReport(BorgInit):
         self._site.login(user, passw) # Now login.
         
         del user; del passw # Delete the login data.
+
+    def _parse_page(self, page="Template talk:Did you know"):
+        dyk = Page(self._site, title=page) # Initiate Page instance
+        text = dyk.getWikiText()           # and get text of page.
+
+        # Parse the page's content for wikicode and gather all the
+        # templates that begin with "{{Did you know"
+        text = text.decode("utf-8")
+        parsed = Parser.parse(text)
+        templates = [a for a in parsed.filter_templates() if 
+                        str(a).startswith("{{Did you know")]
+
+        # Iterate over the template list and get all page names
+        pages = {
+             "nominator_is_creator": [],
+             "nominator_is_not_creator": [],
+             }
+        for template in templates:
+            name = str(template.name)
+            
+            # To be continued.
 
 if __name__ == "__main__":
     print "Troll."

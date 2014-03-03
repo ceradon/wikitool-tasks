@@ -1,3 +1,4 @@
+from re import compile, match, findall
 import sys as Sysyem
 from borg import BorgInit
 from wikitools.wiki import Wiki
@@ -19,6 +20,19 @@ class DYKReport(BorgInit):
         
         self._site.login(user, passw) # Now login.
         
+        # "Created by" and "Nominated by" regular expressions
+        """
+        self._nominator_is_not_creator_regex = compile(
+            r"Created by \[\[User:(.*?)\|.*?\]\] \(\[\[(.*?)\|" +
+            r"talk\]\]\). Nominated by \[\[User:(.*?)\|.*?\]\]" +
+            r" \(\[\[(.*?)\|talk\]\]\) at (.*?)\<")
+
+        self._creator_is_nominator_regex = compile(
+            r"(\<small\>)?Created by (\[\[User:(.*?)\|.*?\]\]) " +
+            r"\(\[\[(.*?)\|talk\]\]\)\. Self-? ?nominated at " +
+            r"(.*?)\</small>.")
+        """
+
         del user; del passw # Delete the login data.
 
     def _parse_page(self, page="Template talk:Did you know"):
@@ -39,8 +53,10 @@ class DYKReport(BorgInit):
              }
         for template in templates:
             name = str(template.name)
-            
-            # To be continued.
+            page = Page(self._site, title=name)
+            wikitext = page.getWikiText()
+            x = findall(r"\<small\>(.*?)\</small\>")
+            a = [b for b in x if "by [[" in b]
 
 if __name__ == "__main__":
     print "Troll."

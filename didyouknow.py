@@ -16,7 +16,7 @@ class DYKReport(BorgInit):
         self._site = Wiki()
 
         user = "Cerabot"
-        passw = super(DYKReport, self)._pass_retrieve()
+        passw = BorgInit()._pass_retrieve
 
         self._site.login(user, passw)
 

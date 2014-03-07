@@ -39,9 +39,9 @@ class DYKReport(BorgInit):
                 "}}", "")
             page = Page(self._site, title=name)
             page_creator = page.getHistory(direction="newer",
-                content=False, limit=1)[1]["user"]
+                content=False, limit=1)[0]["user"]
             dyk_creator = page.getHistory(direction="newer",
-                content=False, limit=1)[1]["user"]
+                content=False, limit=1)[0]["user"]
             if page_creator.lower() != dyk_creator.lower():
                 creator_is_nominator = True
                 matched = findall(r"\<small\>(.*?)\</small\>")

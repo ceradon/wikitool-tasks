@@ -44,18 +44,27 @@ class DYKReport(BorgInit):
                 content=False, limit=1)[1]["user"]
             if page_creator.lower() != dyk_creator.lower():
                 creator_is_nominator = True
-                dyk_nom_not_creator.append({
-                    "pagename":name.split("/")[1],
-                    "pagecreator":page_creator,
-                    "dykname":name,
-                    "dykcreator":dyk_creator,
-                    })
                 matched = findall(r"\<small\>(.*?)\</small\>")
                 matched = match.group(1)
-                x = compile(r"")
+                x = compile(r"\[\[User:(.*?)\|.*?\]\] \(\[\[.*?\|" +
+                    r"talk\]\]\)")
+                creators = x.match(matched.split("&nbsp;")[0])
+                if len(creators.remove(page_creator) > 0:
+                    dyk_nom_not_creator.append({
+                        "pagename":name.split("/")[1],
+                        "pagecreator":creators.append(page_creator),
+                        "dykname":name,
+                        "dykcreator":dyk_creator,
+                        })
+                else:
+                    dyk_nom_not_creator.append({
+                        "pagename":name.split("/")[1],
+                        "pagecreator":[page_creator],
+                        "dykname":name,
+                        "dykcreator":dyk_creator,
+                        })
             else:
                 continue
-
         return dyk_nom_is_creator
 
 if __name__ == "__main__":

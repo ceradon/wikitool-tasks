@@ -1,9 +1,6 @@
 import sys
 
 class BorgInit(object):
-    def __init__(self):
-        pass
-
     @property
     def pass_retrieve(self):
         """

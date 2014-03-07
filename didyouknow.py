@@ -35,7 +35,7 @@ class DYKReport(BorgInit):
         dyk_nom_not_creator = []
         for template in templates:
             creator_is_nominator = False
-            name = str(template).relplace("{{", "Template:").replace(
+            name = str(template).replace("{{", "Template:").replace(
                 "}}", "")
             page = Page(self._site, title=name)
             page_creator = page.getHistory(direction="newer",

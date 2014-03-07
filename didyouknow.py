@@ -14,15 +14,13 @@ class DYKReport(BorgInit):
 
     def __init__(self):
         self._site = Wiki()
-        super(DYKReport, self).__init__()
 
         user = "Cerabot"
-        passw = self._pass_retrieve
+        passw = super(DYKReport, self)._pass_retrieve()
 
         self._site.login(user, passw)
 
         del user; del passw
-        super(DYKReport, self).__init__()
 
     def _parse_page(self, page="Template talk:Did you know", 
             handle_old_pages=False):

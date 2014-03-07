@@ -50,7 +50,7 @@ class DYKReport(BorgInit):
                 x = compile(r"\[\[User:(.*?)\|.*?\]\] \(\[\[.*?\|" +
                     r"talk\]\]\)")
                 creators = x.match(matched.split("&nbsp;")[0])
-                if len(creators.remove(page_creator) > 0:
+                if len(creators.remove(page_creator)) > 0:
                     dyk_nom_not_creator.append({
                         "pagename":name.split("/")[1],
                         "pagecreator":creators.append(page_creator),

@@ -22,8 +22,7 @@ class DYKReport(BorgInit):
 
         del user; del passw
 
-    def _parse_page(self, page="Template talk:Did you know", 
-            handle_old_pages=False):
+    def _parse_page(self, page="Template talk:Did you know"):
         dyk = Page(self._site, title=page)
         text = dyk.getWikiText()
 

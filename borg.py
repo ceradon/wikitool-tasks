@@ -3,7 +3,6 @@ import sys
 import ConfigParser as Config
 
 class BorgInit(object):
-    @property
     def pass_retrieve(self):
         """
         Retrieves the password for Wikipedia bot.
@@ -15,7 +14,6 @@ class BorgInit(object):
         
         return passw
 
-    @property
     def database_retrieve(self):
         """
         Retrieves the login details for Cerabot's Wikimedia

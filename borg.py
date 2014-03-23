@@ -8,7 +8,7 @@ class BorgInit(object):
         """
         Retrieves the password for Wikipedia bot.
         """
-        io = open(expanduser("~", "passfile"), 'r+')
+        io = open(expanduser("~") + "/passfile", 'r+')
         contents = io.read()
         passw = contents.strip()
         io.close()

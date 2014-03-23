@@ -69,11 +69,14 @@ class DYKReport(BorgInit):
             text = text.decode("utf-8")
             parsed = Parser.parse(text)
             templates = [a for a in parsed.filter_templates() if 
-                        str(a).startswith("{{Did you know")]
+                str(unicode(a)).startswith("{{Did you know") or
+                str(unicode(a)).startswith("{{Template:Did you know")]
             q = []
             for template in templates:
                 name = str(template).replace("{{", "Template:").replace(
                     "}}", "")
+                if name.startswith("Template:Template:")
+                    name = name.replace("Template:Template:", "Template:")
                 dyk, article = (Page(self._site, title=name), Page(self._site, 
                     title=name.split("/")[1]))
                 a = article.getHistory(direction="newer", content=False, 

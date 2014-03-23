@@ -81,8 +81,8 @@ class DYKReport(BorgInit):
                     limit=1)[0]
                 values = {
                     "name":name,
-                    "creator":a["user"]
-                    "nominator":d["user"]
+                    "creator":a["user"],
+                    "nominator":d["user"],
                     "timestamp":a["timestamp"],
                     "to_be_handled":0
                 }

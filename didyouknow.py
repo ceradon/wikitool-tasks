@@ -58,7 +58,7 @@ class DYKReport(BorgInit):
         cursor = conn.cursor()
         cursor.execute(self.create_query)
         cursor.execute("SELECT COUNT(*) FROM did_you_know")
-        if not cursor.fetchone()[0] == 1:
+        if not cursor.fetchone() >= 0:
             cursor.execute("""
             SELECT * 
             FROM did_you_know

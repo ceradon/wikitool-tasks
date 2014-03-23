@@ -1,5 +1,5 @@
 from re import compile, match, findall
-import sys as Sysyem
+import sys as System
 from borg import BorgInit
 from wikitools.wiki import Wiki
 from wikitools.page import Page

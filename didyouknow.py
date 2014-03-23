@@ -1,6 +1,7 @@
 from re import compile, match, findall
 import sys as System
 from borg import BorgInit
+import MySQLdb as Database
 from wikitools.wiki import Wiki
 from wikitools.page import Page
 import mwparserfromhell as Parser

@@ -81,6 +81,8 @@ class DYKReport(BorgInit):
                     limit=1)[0]
                 values = {
                     "name":name,
+                    "creator":a["user"]
+                    "nominator":d["user"]
                     "timestamp":a["timestamp"],
                     "to_be_handled":0
                 }
@@ -89,33 +91,6 @@ class DYKReport(BorgInit):
                     q.append(values)
                 else:
                     q.append(values)
-
-        for template in newtemplates:
-            creator_is_nominator = False
-            if template[1].lower() != template[2].lower():
-                creator_is_nominator = True
-                matched = findall(r"\<small\>(.*?)\</small\>")
-                matched = match.group(1)
-                x = compile(r"\[\[User:(.*?)\|.*?\]\] \(\[\[.*?\|" +
-                    r"talk\]\]\)")
-                creators = x.match(matched.split("&nbsp;")[0])
-                if len(creators.remove(template[1])) > 0:
-                    dyk_nom_not_creator.append({
-                        "pagename":name.split("/")[1],
-                        "pagecreator":creators.append(template[1]),
-                        "dykname":name,
-                        "dykcreator":template[2],
-                        })
-                else:
-                    dyk_nom_not_creator.append({
-                        "pagename":name.split("/")[1],
-                        "pagecreator":[template[1]],
-                        "dykname":name,
-                        "dykcreator":template[2],
-                        })
-            else:
-                continue
-        return dyk_nom_not_creator
 
 if __name__ == "__main__":
     print "Troll."

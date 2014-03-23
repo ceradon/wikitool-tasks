@@ -44,14 +44,14 @@ class DYKReport(BorgInit):
         dyk = Page(self._site, title=page)
         text = dyk.getWikiText()
 
-        error = "Well, damn, we {0}. Don't know if it's on our end, " +
+        error = "Well, damn, we {0}. Don't know if it's on our end, " \
             "but I can't proceed. Exiting. Here's the error thrown: {1}"
         login = BorgInit.database_retrieve
         database = database if database else "_cerabot"
         try:
             conn = Database.connect(host=host, db=database, user=login[0],
                 passwd=login[1], cursorclass=Cursors.DictCursor)
-        excpet Exception, e:
+        except Exception, e:
             e = error.format("couldn't connect to the database", e)
             exit()
         cursor = conn.cursor()

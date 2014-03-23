@@ -13,6 +13,21 @@ class DYKReport(BorgInit):
     have been nominated to be on the Did You Know section of
     the Main Page.
     """
+    create_query = """
+        CREATE TABLE IF NOT EXISTS did_you_know (
+            id INT PRIMARY KEY AUTO_INCREMENT,
+            name VARCHAR(255) NOT NULL,
+            creator VARCHAR(255) NOT NULL,
+            nominator VARCHAR(255) NOT NULL,
+            to_be_handled INT NOT NULL,
+            timestamp DATETIME
+        )
+    """
+    insert_query = """
+        INSERT INTO did_you_know (
+        name, to_be_handled, creator, nominator, timestamp)
+        VALUES ({0}, {1}, {2})
+    """
 
     def __init__(self):
         self._site = Wiki()
@@ -38,49 +53,42 @@ class DYKReport(BorgInit):
                 passwd=login[1], cursorclass=Cursors.DictCursor)
         excpet Exception, e:
             e = error.format("couldn't connect to the database", e)
+            exit()
         cursor = conn.cursor()
-        table_name = "did_you_know"
-        cursor.execute("""
-            SELECT COUNT(*)
-            FROM information_schema.tables
-            WHERE table_name = '{0}'
-            """.format(tablename))
+        cursor.execute(self.create_query)
+        cursor.execute("SELECT COUNT(*) FROM did_you_know")
         if not cursor.fetchone()[0] == 1:
-            table_did_exist = False
-            cursor.execute("""
-            CREATE TABLE did_you_know(
-                id INT PRIMARY KEY AUTO_INCREMENT,
-                name VARCHAR(255) NOT NULL,
-                been_handled INT NOT NULL,
-                timestamp DATETIME
-            )
-            """)
-        else:
-            table_did_exist = True
             cursor.execute("""
             SELECT * 
             FROM did_you_know
-            WHERE been_handled = 0
+            WHERE to_be_handled = 0
             """)
-            new_templates = cursor.fetchall()
-        text = text.decode("utf-8")
-        parsed = Parser.parse(text)
-        templates = [a for a in parsed.filter_templates() if 
+            check_list = cursor.fetchall()
+        else:
+            text = text.decode("utf-8")
+            parsed = Parser.parse(text)
+            templates = [a for a in parsed.filter_templates() if 
                         str(a).startswith("{{Did you know")]
-        newtemplates = []
-        for template in templates:
-            name = str(template).replace("{{", "Template:").replace(
-                "}}", "")
-            dyk_page = Page(self._site, title=name)
-            article_page = Page(self._site, title=name.split("/")[1])
-            page_creator = article_page.getHistory(direction="newer",
-                content=False, limit=1)[0]["user"]
-            dyk_creator = dyk_page.getHistory(direction="newer",
-                content=False, limit=1)[0]["user"]
-            if page_creator.lower() != dyk_creator.lower():
-                newtemplates.append((page, page_creator, dyk_creator))
-            else:
-                continue
+            q = []
+            for template in templates:
+                name = str(template).replace("{{", "Template:").replace(
+                    "}}", "")
+                dyk, article = (Page(self._site, title=name), Page(self._site, 
+                    title=name.split("/")[1]))
+                a = article.getHistory(direction="newer", content=False, 
+                    limit=1)[0]
+                d = dyk.getHistory(direction="newer", content=False, 
+                    limit=1)[0]
+                values = {
+                    "name":name,
+                    "timestamp":a["timestamp"],
+                    "to_be_handled":0
+                }
+                if a["user"].lower() != d["user"].lower():
+                    values["to_be_handled"] = 1
+                    q.append(values)
+                else:
+                    q.append(values)
 
         for template in newtemplates:
             creator_is_nominator = False

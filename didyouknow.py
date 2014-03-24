@@ -65,6 +65,7 @@ class DYKReport(BorgInit):
             WHERE to_be_handled = 0
             """)
             check_list = cursor.fetchall()
+            return check_list
         else:
             text = text.decode("utf-8")
             parsed = Parser.parse(text)
@@ -73,7 +74,7 @@ class DYKReport(BorgInit):
                 template = unicode(template)
                 if template.startswith("{{Template:Did you know nominations") \
                     or template.startswith("{{Did you know nominations"):
-                    templates.append(c)
+                    templates.append(template)
             q = []
             for template in templates:
                 name = str(template).replace("{{", "Template:").replace(
@@ -82,10 +83,17 @@ class DYKReport(BorgInit):
                     name = name.replace("Template:Template:", "Template:")
                 dyk, article = (Page(self._site, title=name), Page(self._site, 
                     title=name.split("/")[1]))
-                a = article.getHistory(direction="newer", content=False, 
-                    limit=1)[0]
-                d = dyk.getHistory(direction="newer", content=False, 
-                    limit=1)[0]
+                dyk_text = dyk.getWikiText()
+                if dyk_text.startswith("{{#if:yes|"):
+                    continue
+                try:
+                    a = article.getHistory(direction="newer", content=False, 
+                        limit=1)[0]
+                    d = dyk.getHistory(direction="newer", content=False, 
+                        limit=1)[0]
+                except Page.NoPage:
+                    print "It seens the page doesn't exist. No matter."
+                    continue
                 values = {
                     "name":name,
                     "creator":a["user"],

@@ -13,7 +13,7 @@ class DYKReport(BorgInit):
     have been nominated to be on the Did You Know section of
     the Main Page.
     """
-    create_query = """
+    create_query = u"""
         CREATE TABLE IF NOT EXISTS did_you_know (
             id INT PRIMARY KEY AUTO_INCREMENT,
             name VARCHAR(255) NOT NULL,
@@ -23,7 +23,7 @@ class DYKReport(BorgInit):
             timestamp DATETIME
         )
     """
-    insert_query = """
+    insert_query = u"""
         INSERT INTO did_you_know (
         name, to_be_handled, creator, nominator, timestamp)
         VALUES ('{0}', {1}, '{2}', '{3}', '{4}')
@@ -91,10 +91,10 @@ class DYKReport(BorgInit):
                 except Exception:
                     continue
                 values = {
-                    "name":name,
-                    "creator":a["user"],
-                    "nominator":d["user"],
-                    "timestamp":a["timestamp"],
+                    "name":unicode(name),
+                    "creator":unicode(a["user"]),
+                    "nominator":unicode(d["user"]),
+                    "timestamp":unicode(a["timestamp"]),
                     "to_be_handled":0
                 }
                 if a["user"].lower() != d["user"].lower():
@@ -102,11 +102,18 @@ class DYKReport(BorgInit):
                     q.append(values)
                 else:
                     q.append(values)
+            record_exists = u"SELECT COUNT(*) FROM did_you_know WHERE " \
+                "name = {0}"
             for item in q:
-                form = self.insert_query.format(item["name"],
-                    item["to_be_handled"], item["creator"], 
-                    item["nominator"], item["timestamp"])
-                self.cursor.execute(form)
+                self.cursor.execute(record_exists.format(item["name"])
+                data = self.cursor.fetchone()
+                if data["COUNT(*)"] = 0
+                    form = self.insert_query.format(item["name"],
+                        item["to_be_handled"], item["creator"], 
+                        item["nominator"]), item["timestamp"])
+                    self.cursor.execute(form)
+                else:
+                    continue
 
 if __name__ == "__main__":
     test = DYKReport()

@@ -26,7 +26,7 @@ class DYKReport(BorgInit):
     insert_query = u"""
         INSERT INTO did_you_know (
         name, to_be_handled, creator, nominator, timestamp)
-        VALUES ('{0}', {1}, '{2}', '{3}', '{4}')
+        VALUES ('{0}', '{1}', '{2}', '{3}', '{4}')
     """
 
     def __init__(self):

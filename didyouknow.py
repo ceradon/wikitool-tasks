@@ -35,6 +35,9 @@ class DYKReport(BorgInit):
         user = "Cerabot"
         passw = BorgInit().pass_retrieve()
 
+        self.cursor = None
+        self.conn = None
+
         self._site.login(user, passw)
 
         del user; del passw
@@ -49,23 +52,17 @@ class DYKReport(BorgInit):
         login = BorgInit().database_retrieve()
         database = database if database else login[0] + "_cerabot"
         try:
-            conn = Database.connect(host=host, db=database, user=login[0],
+            self.conn = Database.connect(host=host, db=database, user=login[0],
                 passwd=login[1], cursorclass=Cursors.DictCursor)
         except Exception, e:
             e = error.format("couldn't connect to the database", e)
             print e
             exit()
-        cursor = conn.cursor()
-        cursor.execute(self.create_query)
-        cursor.execute("SELECT COUNT(*) FROM did_you_know")
-        if not cursor.fetchone() >= 0:
-            cursor.execute("""
-            SELECT * 
-            FROM did_you_know
-            WHERE to_be_handled = 0
-            """)
-            check_list = cursor.fetchall()
-            return check_list
+        self.cursor = conn.cursor()
+        self.cursor.execute(self.create_query)
+        self.cursor.execute("SELECT COUNT(*) FROM did_you_know")
+        if not self.cursor.fetchone() >= 0:
+            return
         else:
             text = text.decode("utf-8")
             parsed = Parser.parse(text)
@@ -91,8 +88,10 @@ class DYKReport(BorgInit):
                         limit=1)[0]
                     d = dyk.getHistory(direction="newer", content=False, 
                         limit=1)[0]
-                except Page.NoPage:
-                    print "It seems the page doesn't exist. No matter."
+                except Exception, e:
+                     error = "The page prolly doesn't exist, but I'm " \
+                        "speculating. Here's the error thrown: {0}. "
+                    print error.format(e) + "I'll go on."
                     continue
                 values = {
                     "name":name,
@@ -106,6 +105,11 @@ class DYKReport(BorgInit):
                     q.append(values)
                 else:
                     q.append(values)
+            for item in q:
+                form = self.insert_query.format(item["name"],
+                    item["to_be_handled"], item["creator"], 
+                    item["nominator"], item["timestamp"])
+                self.cursor.execute(form)
 
 if __name__ == "__main__":
     test = DYKReport()

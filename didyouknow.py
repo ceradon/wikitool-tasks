@@ -77,7 +77,7 @@ class DYKReport(BorgInit):
                     templates.append(template)
             q = []
             for template in templates:
-                name = str(template).replace("{{", "Template:").replace(
+                name = unicode(template).replace("{{", "Template:").replace(
                     "}}", "")
                 if name.startswith("Template:Template:"):
                     name = name.replace("Template:Template:", "Template:")

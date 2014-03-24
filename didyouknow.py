@@ -105,7 +105,7 @@ class DYKReport(BorgInit):
             record_exists = u"SELECT COUNT(*) FROM did_you_know WHERE " \
                 "name = {0}"
             for item in q:
-                self.cursor.execute(record_exists.format(item["name"])
+                self.cursor.execute(record_exists.format(item["name"]))
                 data = self.cursor.fetchone()
                 if data["COUNT(*)"] = 0
                     form = self.insert_query.format(item["name"],

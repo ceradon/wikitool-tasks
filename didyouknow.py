@@ -107,7 +107,7 @@ class DYKReport(BorgInit):
             for item in q:
                 self.cursor.execute(record_exists.format(item["name"]))
                 data = self.cursor.fetchone()
-                if data["COUNT(*)"] = 0:
+                if data["COUNT(*)"] == 0:
                     form = self.insert_query.format(item["name"],
                         item["to_be_handled"], item["creator"], 
                         item["nominator"]), item["timestamp"])

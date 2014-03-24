@@ -88,10 +88,7 @@ class DYKReport(BorgInit):
                         limit=1)[0]
                     d = dyk.getHistory(direction="newer", content=False, 
                         limit=1)[0]
-                except Exception, e:
-                    error = "The page prolly doesn't exist, but I'm " \
-                        "speculating. Here's the error thrown: {0}. "
-                    print error.format(e) + "I'll go on."
+                except Exception:
                     continue
                 values = {
                     "name":name,

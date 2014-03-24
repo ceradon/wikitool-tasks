@@ -92,7 +92,7 @@ class DYKReport(BorgInit):
                     d = dyk.getHistory(direction="newer", content=False, 
                         limit=1)[0]
                 except Page.NoPage:
-                    print "It seens the page doesn't exist. No matter."
+                    print "It seems the page doesn't exist. No matter."
                     continue
                 values = {
                     "name":name,

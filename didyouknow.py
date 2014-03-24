@@ -47,7 +47,7 @@ class DYKReport(BorgInit):
         error = "Well, damn, we {0}. Don't know if it's on our end, " \
             "but I can't proceed. Here's the error thrown: {1}. Exiting."
         login = BorgInit().database_retrieve()
-        database = database if database else "_cerabot"
+        database = database if database else login[0] + "_cerabot"
         try:
             conn = Database.connect(host=host, db=database, user=login[0],
                 passwd=login[1], cursorclass=Cursors.DictCursor)

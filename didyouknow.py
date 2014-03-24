@@ -26,7 +26,7 @@ class DYKReport(BorgInit):
     insert_query = """
         INSERT INTO did_you_know (
         name, to_be_handled, creator, nominator, timestamp)
-        VALUES ({0}, {1}, {2})
+        VALUES ({0}, {1}, {2}, {3}, {4})
     """
 
     def __init__(self):
@@ -68,14 +68,17 @@ class DYKReport(BorgInit):
         else:
             text = text.decode("utf-8")
             parsed = Parser.parse(text)
-            templates = [a for a in parsed.filter_templates() if 
-                str(unicode(a)).startswith("{{Did you know") or
-                str(unicode(a)).startswith("{{Template:Did you know")]
+            templates = []
+            for template in parsed.filter_templates():
+                template = unicode(template)
+                if template.startswith("{{Template:Did you know nominations") \
+                    or template.startswith("{{Did you know nominations"):
+                    templates.append(c)
             q = []
             for template in templates:
                 name = str(template).replace("{{", "Template:").replace(
                     "}}", "")
-                if name.startswith("Template:Template:")
+                if name.startswith("Template:Template:"):
                     name = name.replace("Template:Template:", "Template:")
                 dyk, article = (Page(self._site, title=name), Page(self._site, 
                     title=name.split("/")[1]))

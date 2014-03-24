@@ -100,5 +100,6 @@ class DYKReport(BorgInit):
                     q.append(values)
 
 if __name__ == "__main__":
-    print "Troll."
+    test = DYKReport()
+    test._parse_page()
     exit

@@ -26,7 +26,7 @@ class DYKReport(BorgInit):
     insert_query = u"""
         INSERT INTO did_you_know (
         name, to_be_handled, creator, nominator, timestamp)
-        VALUES ('{0}', '{1}', '{2}', '{3}', '{4}')
+        VALUES (%s, %s, %s, %s, %s)
     """
 
     def __init__(self):
@@ -110,10 +110,11 @@ class DYKReport(BorgInit):
                 self.cursor.execute(record_exists.format(item["name"]))
                 data = self.cursor.fetchone()
                 if data["COUNT(*)"] == 0:
-                    form = self.insert_query.format(item["name"],
-                        item["to_be_handled"], item["creator"], 
-                        item["nominator"], item["timestamp"])
-                    self.cursor.execute(form)
+                    self.cursor.execute(self.insert_query, item["name"], 
+                        item["to_be_handled"], item["creator"], item["nominator"],
+                        item["timestamp"])
+                    ret = "    {0} was sent to the database sucessfuly."
+                    print ret.format(item["name"])
                 else:
                     continue
 

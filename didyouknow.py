@@ -92,9 +92,9 @@ class DYKReport(BorgInit):
                     continue
                 escape = self.conn.escape_string
                 values = {
-                    "name":escape(unicode(name)),
-                    "creator":escape(unicode(a["user"])),
-                    "nominator":escape(unicode(d["user"])),
+                    "name":escape(name.encode("utf8")),
+                    "creator":escape(a["user"].encode("utf8")),
+                    "nominator":escape(d["user"].encode("utf8")),
                     "timestamp":escape(unicode(a["timestamp"])),
                     "to_be_handled":0
                 }

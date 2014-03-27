@@ -76,9 +76,8 @@ class DYKReport(BorgInit):
             for template in templates:
                 name = unicode(template).replace("{{", "Template:").replace(
                     "}}", "")
+                name = name.replace("Template:Template:", "Template:")
                 print "[[" + name.encode("utf8") + "]]"
-                if name.startswith("Template:Template:"):
-                    name = name.replace("Template:Template:", "Template:")
                 dyk, article = (Page(self._site, title=name), Page(self._site, 
                     title=name.split("/")[1]))
                 dyk_text = dyk.getWikiText()

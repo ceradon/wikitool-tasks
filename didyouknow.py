@@ -57,12 +57,12 @@ class DYKReport(BorgInit):
         except Exception, e:
             e = error.format("couldn't connect to the database", e)
             print e
-            exit()
+            return False
         self.cursor = self.conn.cursor()
         self.cursor.execute(self.create_query)
         self.cursor.execute("SELECT COUNT(*) FROM did_you_know")
         if not self.cursor.fetchone() >= 0:
-            return
+            return True
         else:
             text = text.decode("utf-8")
             parsed = Parser.parse(text)
@@ -116,6 +116,7 @@ class DYKReport(BorgInit):
                     print ret.format(item["name"])
                 else:
                     continue
+        return True
 
     def _handle_page(self, page):
         pass
@@ -123,4 +124,3 @@ class DYKReport(BorgInit):
 if __name__ == "__main__":
     test = DYKReport()
     test._process_page()
-    exit()

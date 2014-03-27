@@ -90,11 +90,12 @@ class DYKReport(BorgInit):
                         limit=1)[0]
                 except Exception:
                     continue
+                escape = self.conn.escape_string
                 values = {
-                    "name":unicode(name),
-                    "creator":unicode(a["user"]),
-                    "nominator":unicode(d["user"]),
-                    "timestamp":unicode(a["timestamp"]),
+                    "name":escape(unicode(name)),
+                    "creator":escape(unicode(a["user"])),
+                    "nominator":escape(unicode(d["user"])),
+                    "timestamp":escape(unicode(a["timestamp"])),
                     "to_be_handled":0
                 }
                 if a["user"].lower() != d["user"].lower():

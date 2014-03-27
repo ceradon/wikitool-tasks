@@ -42,7 +42,7 @@ class DYKReport(BorgInit):
 
         del user; del passw
 
-    def _parse_page(self, page="Template talk:Did you know", 
+    def _process_page(self, page="Template talk:Did you know", 
             host="tools-db", database=""):
         dyk = Page(self._site, title=page)
         text = dyk.getWikiText()
@@ -117,7 +117,10 @@ class DYKReport(BorgInit):
                 else:
                     continue
 
+    def _handle_page(self, page):
+        pass
+
 if __name__ == "__main__":
     test = DYKReport()
-    test._parse_page()
+    test._process_page()
     exit()

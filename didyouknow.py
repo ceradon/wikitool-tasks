@@ -20,7 +20,7 @@ class DYKReport(BorgInit):
             creator VARCHAR(255) NOT NULL,
             nominator VARCHAR(255) NOT NULL,
             to_be_handled INT NOT NULL,
-            timestamp DATETIME
+            timestamp VARCHAR(255)
         )
     """
     insert_query = u"""

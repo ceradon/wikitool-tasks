@@ -52,7 +52,7 @@ class DYKReport(BorgInit):
         database = database if database else login[0] + "_cerabot"
         try:
             self.conn = oursql.connect(host=host, db=database, user=login[0],
-                passwd=login[1], cursorclass=oursql.DictCursor)
+                passwd=login[1])
         except Exception, e:
             e = error.format("couldn't connect to the database", e)
             print e

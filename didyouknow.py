@@ -89,10 +89,10 @@ class DYKReport(BorgInit):
                 except Exception:
                     continue
                 values = {
-                    "name":escape(name.encode("utf8")),
-                    "creator":escape(a["user"].encode("utf8")),
-                    "nominator":escape(d["user"].encode("utf8")),
-                    "timestamp":escape(unicode(a["timestamp"])),
+                    "name":name.encode("utf8"),
+                    "creator":a["user"].encode("utf8"),
+                    "nominator":d["user"].encode("utf8"),
+                    "timestamp":a["timestamp"].encode("utf8"),
                     "to_be_handled":0
                 }
                 if a["user"].lower() != d["user"].lower():

@@ -1,8 +1,7 @@
 from re import compile, match, findall
 import sys as System
 from borg import BorgInit
-import MySQLdb as Database
-import MySQLdb.cursors as Cursors
+import oursql as Database
 from wikitools.wiki import Wiki
 from wikitools.page import Page
 import mwparserfromhell as Parser
@@ -53,7 +52,7 @@ class DYKReport(BorgInit):
         database = database if database else login[0] + "_cerabot"
         try:
             self.conn = Database.connect(host=host, db=database, user=login[0],
-                passwd=login[1], cursorclass=Cursors.DictCursor)
+                passwd=login[1], cursorclass=oursql.DictCursor)
         except Exception, e:
             e = error.format("couldn't connect to the database", e)
             print e

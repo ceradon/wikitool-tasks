@@ -108,10 +108,10 @@ class DYKReport(BorgInit):
                 self.cursor.execute(record_exists, (item["name"]))
                 data = self.cursor.fetchone()
                 if data["COUNT(*)"] == 0:
-                    self.cursor.execute(self.insert_query, (item["name"], 
+                    x = self.cursor.execute(self.insert_query, (item["name"], 
                         item["to_be_handled"], item["creator"], item["nominator"],
                         item["timestamp"]))
-                    ret = "    {0} was sent to the database sucessfuly."
+                    ret = "    {0} was sent to the database sucessfuly. " + str(x)
                     print ret.format(item["name"])
                 else:
                     continue

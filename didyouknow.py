@@ -114,11 +114,9 @@ class DYKReport(BorgInit):
                             item["creator"], 
                             item["nominator"],
                             item["timestamp"]))
-                        ret = "{0} was sent to the database sucessfuly. " 
-                            + str(x)
-                        print ret.format(item["name"])
                     else:
                         continue
+                print "Database operations executed successfully."
         return True
 
     def _handle_page(self, page):

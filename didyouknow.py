@@ -115,7 +115,7 @@ class DYKReport(BorgInit):
                             item["creator"], 
                             item["nominator"],
                             item["timestamp"]))
-                        ret = "    {0} was sent to the database sucessfuly. " 
+                        ret = "{0} was sent to the database sucessfuly. " 
                             + str(x)
                         print ret.format(item["name"])
                     else:

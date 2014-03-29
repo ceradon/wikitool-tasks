@@ -88,7 +88,6 @@ class DYKReport(BorgInit):
                         limit=1)[0]
                 except Exception:
                     continue
-                escape = self.conn.escape_string
                 values = {
                     "name":escape(name.encode("utf8")),
                     "creator":escape(a["user"].encode("utf8")),

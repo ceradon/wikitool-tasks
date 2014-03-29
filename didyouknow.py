@@ -104,17 +104,22 @@ class DYKReport(BorgInit):
                     q.append(values)
             record_exists = u"SELECT COUNT(*) FROM did_you_know WHERE " \
                 "name = %s"
-            for item in q:
-                self.cursor.execute(record_exists, (item["name"]))
-                data = self.cursor.fetchone()
-                if data["COUNT(*)"] == 0:
-                    x = self.cursor.execute(self.insert_query, (item["name"], 
-                        item["to_be_handled"], item["creator"], item["nominator"],
-                        item["timestamp"]))
-                    ret = "    {0} was sent to the database sucessfuly. " + str(x)
-                    print ret.format(item["name"])
-                else:
-                    continue
+            with self.cursor:
+                for item in q:
+                    self.cursor.execute(record_exists, (item["name"]))
+                    data = self.cursor.fetchone()
+                    if data["COUNT(*)"] == 0:
+                        x = self.cursor.execute(self.insert_query, (
+                            item["name"], 
+                            item["to_be_handled"], 
+                            item["creator"], 
+                            item["nominator"],
+                            item["timestamp"]))
+                        ret = "    {0} was sent to the database sucessfuly. " 
+                            + str(x)
+                        print ret.format(item["name"])
+                    else:
+                        continue
         return True
 
     def _handle_page(self, page):

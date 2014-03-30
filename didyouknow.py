@@ -123,7 +123,7 @@ class DYKReport(BorgInit):
                 values["to_be_handled"], 
                 values["creator"], 
                 values["nominator"],
-                values["timestamp"]
+                unicode(values["timestamp"])
             ))
         self.conn.commit()
 

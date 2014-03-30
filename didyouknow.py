@@ -106,6 +106,7 @@ class DYKReport(BorgInit):
         print u"11, {0}".format(unicode(templates))
         q = []
         for template in templates:
+            print template
             dyk, article = (Page(self._site, title=name), Page(self._site, 
                 title=name.split("/")[1]))
             dyk_text = dyk.getWikiText()

@@ -95,13 +95,7 @@ class DYKReport(BorgInit):
                 return False
             return True
         else:
-            print "9"
-            try:
-                self._handle_sql_query(templates=self.templates)
-            except Exception, e:
-                "Program threw error: {0}".format(e)
-                return False
-            return True
+            self._handle_sql_query(templates=self.templates)
 
     def _handle_sql_query(self, templates=None):
         print u"11"

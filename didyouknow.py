@@ -108,7 +108,7 @@ class DYKReport(BorgInit):
         q = []
         for template in templates:
             print template
-            dyk, article = (Page(self._site, title=name), Page(self._site, 
+            print (Page(self._site, title=name), Page(self._site, 
                 title=name.split("/")[1]))
             print dyk, article
             dyk_text = dyk.getWikiText()

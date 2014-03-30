@@ -103,7 +103,7 @@ class DYKReport(BorgInit):
             return True
 
     def _handle_sql_query(self, templates=None):
-        print "11"
+        print u"11, {0}".format(unicode(templates))
         q = []
         for template in templates:
             dyk, article = (Page(self._site, title=name), Page(self._site, 

@@ -130,7 +130,7 @@ class DYKReport(BorgInit):
                         item["nominator"],
                         item["timestamp"]
                     ))
-                    self.
+                    self.conn.commit()
                 else:
                     continue
             print "Database operations executed successfully."

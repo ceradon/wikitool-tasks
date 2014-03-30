@@ -111,13 +111,13 @@ class DYKReport(BorgInit):
                 "name":template.encode("utf8"),
                 "creator":a["user"].encode("utf8"),
                 "nominator":d["user"].encode("utf8"),
-                "timestamp":a["timestamp"],
+                "timestamp":a["timestamp"].encode("utf8"),
                 "to_be_handled":0
             }
             print "D"
             if a["user"].lower() != d["user"].lower():
                 values["to_be_handled"] = 1
-            print "E"
+            print values
             self.cursor.execute(self.insert_query, (
                 values["name"], 
                 values["to_be_handled"], 

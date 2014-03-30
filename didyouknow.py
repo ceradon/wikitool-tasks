@@ -110,14 +110,17 @@ class DYKReport(BorgInit):
             dyk, article = (Page(self._site, title=name), Page(self._site, 
                 title=name.split("/")[1]))
             dyk_text = dyk.getWikiText()
+            print "A"
             if dyk_text.startswith("{{#if:yes|"):
                 continue
             try:
+                print "B"
                 a = article.getHistory(direction="newer", content=False, 
                     limit=1)[0]
                 d = dyk.getHistory(direction="newer", content=False, 
                     limit=1)[0]
             except Exception:
+                print "C"
                 continue
             values = {
                 "name":name.encode("utf8"),
@@ -126,11 +129,13 @@ class DYKReport(BorgInit):
                 "timestamp":a["timestamp"].encode("utf8"),
                 "to_be_handled":0
             }
+            print "D"
             if a["user"].lower() != d["user"].lower():
                 values["to_be_handled"] = 1
                 q.append(values)
             else:
                 q.append(values)
+            print "E"
         with self.cursor:
             for item in q:
                 if data["COUNT(*)"] == 0:

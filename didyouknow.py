@@ -117,14 +117,9 @@ class DYKReport(BorgInit):
             print "D"
             if a["user"].lower() != d["user"].lower():
                 values["to_be_handled"] = 1
-                q.append(values)
-            else:
-                q.append(values)
-            print "E"
-        with self.cursor:
-            for item in q:
-                print "F"
-                x = self.cursor.execute(self.insert_query, (
+            with self.cursor:
+                print "E"
+                self.cursor.execute(self.insert_query, (
                     item["name"], 
                     item["to_be_handled"], 
                     item["creator"], 
@@ -132,7 +127,6 @@ class DYKReport(BorgInit):
                     item["timestamp"]
                 ))
                 self.conn.commit()
-            print "Database operations executed successfully."
 
     def _handle_page(self, page):
         pass

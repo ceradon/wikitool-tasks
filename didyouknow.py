@@ -119,7 +119,6 @@ class DYKReport(BorgInit):
             if a["user"].lower() != d["user"].lower():
                 values["to_be_handled"] = 1
             print values
-            encoding
             try:
                 self.cursor.execute(self.insert_query, (
                     values["name"], 

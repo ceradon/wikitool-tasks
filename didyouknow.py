@@ -126,7 +126,7 @@ class DYKReport(BorgInit):
                     values["nominator"],
                     values["timestamp"]
                 ))
-                self.conn.commit()
+        self.conn.commit()
 
     def _handle_page(self, page):
         pass

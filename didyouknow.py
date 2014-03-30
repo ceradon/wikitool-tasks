@@ -111,7 +111,7 @@ class DYKReport(BorgInit):
                 "name":template.encode("utf8"),
                 "creator":a["user"].encode("utf8"),
                 "nominator":d["user"].encode("utf8"),
-                "timestamp":a["timestamp"].encode("utf8"),
+                "timestamp":a["timestamp"],
                 "to_be_handled":0
             }
             print "D"

@@ -48,7 +48,6 @@ class DYKReport(BorgInit):
         text = dyk.getWikiText()
         text = text.decode("utf-8")
         parsed = Parser.parse(text)
-        print "1, {0}".format(len(parsed.filter_templates()))
         for name in parsed.filter_templates():
             name = unicode(name)
             if name.startswith("{{Template:Did you know nominations") \
@@ -92,7 +91,7 @@ class DYKReport(BorgInit):
         q = []
         for template in templates:
             dyk, article = (Page(self._site, title=template), Page(
-                self._site, title=tempalte.split("/")[1]))
+                self._site, title=template.split("/")[1]))
             dyk_text = dyk.getWikiText()
             print "A"
             if dyk_text.startswith("{{#if:yes|"):

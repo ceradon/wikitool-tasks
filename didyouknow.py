@@ -59,6 +59,7 @@ class DYKReport(BorgInit):
                 self.templates.append(name)
             else:
                 continue
+        print self.templates
 
         print "3"
         error = "Couldn't connect to database. oursql threw error: {0}."
@@ -103,7 +104,7 @@ class DYKReport(BorgInit):
             return True
 
     def _handle_sql_query(self, templates=None):
-        print u"11, {0}".format(unicode(templates))
+        print u"11"
         q = []
         for template in templates:
             print template

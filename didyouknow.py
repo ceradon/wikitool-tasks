@@ -117,7 +117,7 @@ class DYKReport(BorgInit):
             print "D"
             if a["user"].lower() != d["user"].lower():
                 values["to_be_handled"] = 1
-                print "E"
+            print "E"
             self.cursor.execute(self.insert_query, (
                 values["name"], 
                 values["to_be_handled"], 

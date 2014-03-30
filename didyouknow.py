@@ -72,7 +72,7 @@ class DYKReport(BorgInit):
             return False
         self.cursor.execute(self.create_query)
         self.cursor.execute("SELECT COUNT(*) FROM did_you_know")
-        if not self.cursor.fetchone() >= 1:
+        if self.cursor.fetchone() >= 1:
             templates = self.templates
             self.cursor.execute("SELECT * FROM did_you_know")
             rows = self.cursor.rowcount()
@@ -106,7 +106,7 @@ class DYKReport(BorgInit):
                 print "C"
                 continue
             values = {
-                "name":name.encode("utf8"),
+                "name":template.encode("utf8"),
                 "creator":a["user"].encode("utf8"),
                 "nominator":d["user"].encode("utf8"),
                 "timestamp":a["timestamp"].encode("utf8"),
@@ -122,6 +122,7 @@ class DYKReport(BorgInit):
         with self.cursor:
             for item in q:
                 if data["COUNT(*)"] == 0:
+                    print "F"
                     x = self.cursor.execute(self.insert_query, (
                         item["name"], 
                         item["to_be_handled"], 
@@ -129,6 +130,7 @@ class DYKReport(BorgInit):
                         item["nominator"],
                         item["timestamp"]
                     ))
+                    self.
                 else:
                     continue
             print "Database operations executed successfully."

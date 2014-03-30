@@ -1,5 +1,6 @@
 from re import compile, match, findall
 import sys
+from chardet import detect
 from borg import BorgInit
 import oursql
 from wikitools.wiki import Wiki
@@ -118,13 +119,15 @@ class DYKReport(BorgInit):
             if a["user"].lower() != d["user"].lower():
                 values["to_be_handled"] = 1
             print values
+            encoding
             try:
                 self.cursor.execute(self.insert_query, (
                     values["name"], 
                     values["to_be_handled"], 
                     values["creator"], 
                     values["nominator"],
-                    unicode(values["timestamp"])
+                    values["timestamp"].decode(
+                        detect(values["timestamp"])["encoding"])
                 ))
             except Exception:
                 self.cursor.execute(self.insert_query, (

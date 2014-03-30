@@ -45,79 +45,94 @@ class DYKReport(BorgInit):
             host="tools-db", database=""):
         dyk = Page(self._site, title=page)
         text = dyk.getWikiText()
+        text = text.decode("utf-8")
+        parsed = Parser.parse(text)
+        self.templates = []
+        for name in parsed.filter_templates():
+            name = unicode(name)
+            if name.startswith("{{Template:Did you know nominations") \
+                or name.startswith("{{Did you know nominations"):
+                name = unicode(name).replace("{{", "Template:").replace(
+                    "}}", "")
+                name = name.replace("Template:Template:", "Template:")
+                self.templates.append(name)
+            else:
+                continue
 
-        error = "Well, damn, we {0}. Don't know if it's on our end, " \
-            "but I can't proceed. Here's the error thrown: {1}. Exiting."
+        error = "Couldn't connect to database. oursql threw error: {0}."
         login = BorgInit().database_retrieve()
         database = database if database else login[0] + "_cerabot"
         try:
-            self.conn = oursql.connect(host=host, db=database, user=login[0],
-                passwd=login[1])
+            self.conn = oursql.connect(host=host, db=database, 
+                user=login[0], passwd=login[1])
+            self.cursor = self.conn.cursor(oursql.DictCursor)
         except Exception, e:
-            e = error.format("couldn't connect to the database", e)
+            e = error.format(e)
             print e
             return False
-        self.cursor = self.conn.cursor()
         self.cursor.execute(self.create_query)
         self.cursor.execute("SELECT COUNT(*) FROM did_you_know")
         if not self.cursor.fetchone() >= 1:
+            templates = self.templates
+            self.cursor.execute("SELECT * FROM did_you_know")
+            rows = self.cursor.rowcount()
+            while rows:
+                data = self.cursor.fetchone()
+                if data["name"] in templates:
+                    templates.remove(data["name"])
+                    rows -= 1
+                else:
+                    continue
+            self._handle_sql_query(templates=templates)
             return True
         else:
-            text = text.decode("utf-8")
-            parsed = Parser.parse(text)
-            templates = []
-            for template in parsed.filter_templates():
-                template = unicode(template)
-                if template.startswith("{{Template:Did you know nominations") \
-                    or template.startswith("{{Did you know nominations"):
-                    templates.append(template)
-            q = []
-            for template in templates:
-                name = unicode(template).replace("{{", "Template:").replace(
-                    "}}", "")
-                name = name.replace("Template:Template:", "Template:")
-                dyk, article = (Page(self._site, title=name), Page(self._site, 
-                    title=name.split("/")[1]))
-                dyk_text = dyk.getWikiText()
-                if dyk_text.startswith("{{#if:yes|"):
-                    continue
-                try:
-                    a = article.getHistory(direction="newer", content=False, 
-                        limit=1)[0]
-                    d = dyk.getHistory(direction="newer", content=False, 
-                        limit=1)[0]
-                except Exception:
-                    continue
-                values = {
-                    "name":name.encode("utf8"),
-                    "creator":a["user"].encode("utf8"),
-                    "nominator":d["user"].encode("utf8"),
-                    "timestamp":a["timestamp"].encode("utf8"),
-                    "to_be_handled":0
-                }
-                if a["user"].lower() != d["user"].lower():
-                    values["to_be_handled"] = 1
-                    q.append(values)
+            try:
+                self._handle_sql_query()
+            except Exception, e:
+                "Program threw error: {0}".format(e)
+                return False
+            return True
+
+    def _handle_sql_query(self, templates=self.templates):
+        q = []
+        for template in templates:
+            dyk, article = (Page(self._site, title=name), Page(self._site, 
+                title=name.split("/")[1]))
+            dyk_text = dyk.getWikiText()
+            if dyk_text.startswith("{{#if:yes|"):
+                continue
+            try:
+                a = article.getHistory(direction="newer", content=False, 
+                    limit=1)[0]
+                d = dyk.getHistory(direction="newer", content=False, 
+                    limit=1)[0]
+            except Exception:
+                continue
+            values = {
+                "name":name.encode("utf8"),
+                "creator":a["user"].encode("utf8"),
+                "nominator":d["user"].encode("utf8"),
+                "timestamp":a["timestamp"].encode("utf8"),
+                "to_be_handled":0
+            }
+            if a["user"].lower() != d["user"].lower():
+                values["to_be_handled"] = 1
+                q.append(values)
+            else:
+                q.append(values)
+        with self.cursor:
+            for item in q:
+                if data["COUNT(*)"] == 0:
+                    x = self.cursor.execute(self.insert_query, (
+                        item["name"], 
+                        item["to_be_handled"], 
+                        item["creator"], 
+                        item["nominator"],
+                        item["timestamp"]
+                    ))
                 else:
-                    q.append(values)
-            record_exists = u"SELECT COUNT(*) FROM did_you_know WHERE " \
-                "name = '%s'"
-            with self.cursor:
-                for item in q:
-                    self.cursor.execute(record_exists, (item["name"]))
-                    data = self.cursor.fetchone()
-                    if data["COUNT(*)"] == 0:
-                        x = self.cursor.execute(self.insert_query, (
-                            item["name"], 
-                            item["to_be_handled"], 
-                            item["creator"], 
-                            item["nominator"],
-                            item["timestamp"]
-                        ))
-                    else:
-                        continue
-                print "Database operations executed successfully."
-        return True
+                    continue
+            print "Database operations executed successfully."
 
     def _handle_page(self, page):
         pass

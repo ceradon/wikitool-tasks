@@ -72,10 +72,12 @@ class DYKReport(BorgInit):
             return False
         self.cursor.execute(self.create_query)
         self.cursor.execute("SELECT COUNT(*) FROM did_you_know")
-        if self.cursor.fetchone() >= 1:
+        x = self.cursor.fetchone()
+        print x
+        if x >= 1:
             templates = self.templates
             self.cursor.execute("SELECT * FROM did_you_know")
-            rows = self.cursor.rowcount()
+            rows = self.cursor.rowcount
             while rows:
                 data = self.cursor.fetchone()
                 if data["name"] in templates:

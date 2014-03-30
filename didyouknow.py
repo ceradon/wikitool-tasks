@@ -59,9 +59,7 @@ class DYKReport(BorgInit):
                 self.templates.append(name)
             else:
                 continue
-        print self.templates
 
-        print "3"
         error = "Couldn't connect to database. oursql threw error: {0}."
         login = BorgInit().database_retrieve()
         database = database if database else login[0] + "_cerabot"
@@ -75,9 +73,7 @@ class DYKReport(BorgInit):
             return False
         self.cursor.execute(self.create_query)
         self.cursor.execute("SELECT COUNT(*) FROM did_you_know")
-        print "5"
         if not self.cursor.fetchone() >= 1:
-            print "7"
             templates = self.templates
             self.cursor.execute("SELECT * FROM did_you_know")
             rows = self.cursor.rowcount()
@@ -88,23 +84,15 @@ class DYKReport(BorgInit):
                     rows -= 1
                 else:
                     continue
-            try:
-                self._handle_sql_query(templates=templates)
-            except Exception, e:
-                "Program threw error: {0}".format(e)
-                return False
-            return True
+            self._handle_sql_query(templates=templates)
         else:
             self._handle_sql_query(templates=self.templates)
 
     def _handle_sql_query(self, templates=None):
-        print u"11"
         q = []
         for template in templates:
-            print template
-            print (Page(self._site, title=name), Page(self._site, 
-                title=name.split("/")[1]))
-            print dyk, article
+            dyk, article -  (Page(self._site, title=template), Page(
+                self._site, title=tempalte.split("/")[1]))
             dyk_text = dyk.getWikiText()
             print "A"
             if dyk_text.startswith("{{#if:yes|"):

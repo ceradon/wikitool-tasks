@@ -84,8 +84,10 @@ class DYKReport(BorgInit):
                 else:
                     continue
             self._handle_sql_query(templates=templates)
+            return True
         else:
             self._handle_sql_query(templates=self.templates)
+            return True
 
     def _handle_sql_query(self, templates=None):
         q = []
@@ -121,18 +123,15 @@ class DYKReport(BorgInit):
             print "E"
         with self.cursor:
             for item in q:
-                if data["COUNT(*)"] == 0:
-                    print "F"
-                    x = self.cursor.execute(self.insert_query, (
-                        item["name"], 
-                        item["to_be_handled"], 
-                        item["creator"], 
-                        item["nominator"],
-                        item["timestamp"]
-                    ))
-                    self.conn.commit()
-                else:
-                    continue
+                print "F"
+                x = self.cursor.execute(self.insert_query, (
+                    item["name"], 
+                    item["to_be_handled"], 
+                    item["creator"], 
+                    item["nominator"],
+                    item["timestamp"]
+                ))
+                self.conn.commit()
             print "Database operations executed successfully."
 
     def _handle_page(self, page):

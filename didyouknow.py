@@ -25,7 +25,7 @@ class DYKReport(BorgInit):
     insert_query = u"""
         INSERT INTO did_you_know (
         name, to_be_handled, creator, nominator, timestamp)
-        VALUES (%s, %s, %s, %s, %s)
+        VALUES (?, ?, ?, ?, ?)
     """
     templates = []
 

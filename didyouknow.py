@@ -60,7 +60,7 @@ class DYKReport(BorgInit):
         self.cursor = self.conn.cursor()
         self.cursor.execute(self.create_query)
         self.cursor.execute("SELECT COUNT(*) FROM did_you_know")
-        if not self.cursor.fetchone() >= 0:
+        if not self.cursor.fetchone() >= 1:
             return True
         else:
             text = text.decode("utf-8")
@@ -101,7 +101,7 @@ class DYKReport(BorgInit):
                 else:
                     q.append(values)
             record_exists = u"SELECT COUNT(*) FROM did_you_know WHERE " \
-                "name = %s"
+                "name = '%s'"
             with self.cursor:
                 for item in q:
                     self.cursor.execute(record_exists, (item["name"]))
@@ -112,7 +112,8 @@ class DYKReport(BorgInit):
                             item["to_be_handled"], 
                             item["creator"], 
                             item["nominator"],
-                            item["timestamp"]))
+                            item["timestamp"]
+                        ))
                     else:
                         continue
                 print "Database operations executed successfully."

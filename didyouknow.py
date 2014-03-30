@@ -48,6 +48,7 @@ class DYKReport(BorgInit):
         text = dyk.getWikiText()
         text = text.decode("utf-8")
         parsed = Parser.parse(text)
+        print "1"
         for name in parsed.filter_templates():
             name = unicode(name)
             if name.startswith("{{Template:Did you know nominations") \
@@ -59,6 +60,7 @@ class DYKReport(BorgInit):
             else:
                 continue
 
+        print "3"
         error = "Couldn't connect to database. oursql threw error: {0}."
         login = BorgInit().database_retrieve()
         database = database if database else login[0] + "_cerabot"
@@ -72,7 +74,9 @@ class DYKReport(BorgInit):
             return False
         self.cursor.execute(self.create_query)
         self.cursor.execute("SELECT COUNT(*) FROM did_you_know")
+        print "5"
         if not self.cursor.fetchone() >= 1:
+            print "7"
             templates = self.templates
             self.cursor.execute("SELECT * FROM did_you_know")
             rows = self.cursor.rowcount()
@@ -90,6 +94,7 @@ class DYKReport(BorgInit):
                 return False
             return True
         else:
+            print "9"
             try:
                 self._handle_sql_query(templates=self.templates)
             except Exception, e:
@@ -98,6 +103,7 @@ class DYKReport(BorgInit):
             return True
 
     def _handle_sql_query(self, templates=None):
+        print "11"
         q = []
         for template in templates:
             dyk, article = (Page(self._site, title=name), Page(self._site, 

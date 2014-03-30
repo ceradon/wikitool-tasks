@@ -27,6 +27,7 @@ class DYKReport(BorgInit):
         name, to_be_handled, creator, nominator, timestamp)
         VALUES (%s, %s, %s, %s, %s)
     """
+    templates = []
 
     def __init__(self):
         self._site = Wiki()
@@ -47,7 +48,6 @@ class DYKReport(BorgInit):
         text = dyk.getWikiText()
         text = text.decode("utf-8")
         parsed = Parser.parse(text)
-        self.templates = []
         for name in parsed.filter_templates():
             name = unicode(name)
             if name.startswith("{{Template:Did you know nominations") \
@@ -83,17 +83,21 @@ class DYKReport(BorgInit):
                     rows -= 1
                 else:
                     continue
-            self._handle_sql_query(templates=templates)
+            try:
+                self._handle_sql_query(templates=templates)
+            except Exception, e:
+                "Program threw error: {0}".format(e)
+                return False
             return True
         else:
             try:
-                self._handle_sql_query()
+                self._handle_sql_query(templates=self.templates)
             except Exception, e:
                 "Program threw error: {0}".format(e)
                 return False
             return True
 
-    def _handle_sql_query(self, templates=self.templates):
+    def _handle_sql_query(self, templates=None):
         q = []
         for template in templates:
             dyk, article = (Page(self._site, title=name), Page(self._site, 

@@ -120,11 +120,11 @@ class DYKReport(BorgInit):
             with self.cursor:
                 print "E"
                 self.cursor.execute(self.insert_query, (
-                    item["name"], 
-                    item["to_be_handled"], 
-                    item["creator"], 
-                    item["nominator"],
-                    item["timestamp"]
+                    values["name"], 
+                    values["to_be_handled"], 
+                    values["creator"], 
+                    values["nominator"],
+                    values["timestamp"]
                 ))
                 self.conn.commit()
 

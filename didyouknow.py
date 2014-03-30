@@ -109,6 +109,7 @@ class DYKReport(BorgInit):
             print template
             dyk, article = (Page(self._site, title=name), Page(self._site, 
                 title=name.split("/")[1]))
+            print dyk, article
             dyk_text = dyk.getWikiText()
             print "A"
             if dyk_text.startswith("{{#if:yes|"):

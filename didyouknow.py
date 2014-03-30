@@ -48,7 +48,7 @@ class DYKReport(BorgInit):
         text = dyk.getWikiText()
         text = text.decode("utf-8")
         parsed = Parser.parse(text)
-        print "1, {0}".format(len(parsed))
+        print "1, {0}".format(len(parsed.filter_templates()))
         for name in parsed.filter_templates():
             name = unicode(name)
             if name.startswith("{{Template:Did you know nominations") \

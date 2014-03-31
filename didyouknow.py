@@ -98,7 +98,7 @@ class DYKReport(BorgInit):
             categories = dyk.getCategories()
             s = " ".join(categories)
             result = findall("Category:Passed DYK nominations from", s)
-            if len(result) >= 1:
+            if result:
                 continue
             try:
                 print "B"

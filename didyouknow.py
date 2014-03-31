@@ -95,9 +95,10 @@ class DYKReport(BorgInit):
         for template in templates:
             dyk, article = (Page(self._site, title=template), Page(
                 self._site, title=template.split("/")[1]))
-            dyk_text = dyk.getWikiText()
-            print "A"
-            if dyk_text.startswith("{{#if:yes|"):
+            categories = dyk.getCategories()
+            s = " ".join(categories)
+            result = findall("Category:Passed DYK nominations from", s)
+            if len(result) >= 1:
                 continue
             try:
                 print "B"

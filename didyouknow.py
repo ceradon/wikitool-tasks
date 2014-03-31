@@ -76,10 +76,8 @@ class DYKReport(BorgInit):
         if self.cursor.fetchone()["COUNT(*)"] >= 1:
             templates = self.templates
             self.cursor.execute("SELECT * FROM did_you_know")
-            rows = self.cursor.rowcount
-            while rows:
-                data = self.cursor.fetchall()
-                print data
+            data = self.cursor.fetchall()
+            for item in data:
                 if data["name"] in templates:
                     templates.remove(data["name"])
                     rows -= 1

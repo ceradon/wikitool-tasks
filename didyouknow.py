@@ -79,6 +79,7 @@ class DYKReport(BorgInit):
             rows = self.cursor.rowcount
             while rows:
                 data = self.cursor.fetchall()
+                print data
                 if data["name"] in templates:
                     templates.remove(data["name"])
                     rows -= 1

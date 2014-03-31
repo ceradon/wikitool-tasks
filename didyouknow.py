@@ -109,10 +109,10 @@ class DYKReport(BorgInit):
                 print "C"
                 continue
             values = {
-                "name":template.encode("utf8"),
-                "creator":a["user"].encode("utf8"),
-                "nominator":d["user"].encode("utf8"),
-                "timestamp":a["timestamp"].encode("utf8"),
+                "name":unicode(template),
+                "creator":unicode(a["user"]),
+                "nominator":unicode(d["user"]),
+                "timestamp":unicode(a["timestamp"]),
                 "to_be_handled":0
             }
             print "D"
@@ -124,8 +124,7 @@ class DYKReport(BorgInit):
                 values["to_be_handled"], 
                 values["creator"], 
                 values["nominator"],
-                values["timestamp"].decode(
-                    detect(values["timestamp"])["encoding"])
+                values["timestamp"]
             ))
         self.conn.commit()
 

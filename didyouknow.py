@@ -110,10 +110,10 @@ class DYKReport(BorgInit):
                 print "C"
                 continue
             values = {
-                "name":unicode(template),
-                "creator":unicode(a["user"]),
-                "nominator":unicode(d["user"]),
-                "timestamp":unicode(a["timestamp"]),
+                "name":template.encode("utf8"),
+                "creator":a["user"].encode("utf8"),
+                "nominator":d["user"].encode("utf8"),
+                "timestamp":a["timestamp"].encode("utf8"),
                 "to_be_handled":0
             }
             print "D"

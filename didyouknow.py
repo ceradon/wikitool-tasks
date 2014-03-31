@@ -119,23 +119,14 @@ class DYKReport(BorgInit):
             if a["user"].lower() != d["user"].lower():
                 values["to_be_handled"] = 1
             print values
-            try:
-                self.cursor.execute(self.insert_query, (
-                    values["name"], 
-                    values["to_be_handled"], 
-                    values["creator"], 
-                    values["nominator"],
-                    values["timestamp"].decode(
-                        detect(values["timestamp"])["encoding"])
-                ))
-            except Exception:
-                self.cursor.execute(self.insert_query, (
-                    values["name"], 
-                    values["to_be_handled"], 
-                    values["creator"], 
-                    values["nominator"],
-                    "none"
-                ))
+            self.cursor.execute(self.insert_query, (
+                values["name"], 
+                values["to_be_handled"], 
+                values["creator"], 
+                values["nominator"],
+                values["timestamp"].decode(
+                    detect(values["timestamp"])["encoding"])
+            ))
         self.conn.commit()
 
     def _handle_page(self, page):

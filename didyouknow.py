@@ -13,7 +13,7 @@ class DYKReport(BorgInit):
     have been nominated to be on the Did You Know section of
     the Main Page.
     """
-    create_query = u"""
+    create_query = """
         CREATE TABLE IF NOT EXISTS did_you_know (
             id INT PRIMARY KEY AUTO_INCREMENT,
             name VARCHAR(255) NOT NULL,
@@ -23,7 +23,7 @@ class DYKReport(BorgInit):
             timestamp VARCHAR(255)
         )
     """
-    insert_query = u"""
+    insert_query = """
         INSERT INTO did_you_know (
         name, to_be_handled, creator, nominator, timestamp)
         VALUES (?, ?, ?, ?, ?)
@@ -120,7 +120,7 @@ class DYKReport(BorgInit):
             if a["user"].lower() != d["user"].lower():
                 values["to_be_handled"] = 1
             print values
-            self.cursor.execute(self.insert_query, (
+            self.cursor.execute(self.insert_query.encode("utf8"), (
                 values["name"], 
                 values["to_be_handled"], 
                 values["creator"], 

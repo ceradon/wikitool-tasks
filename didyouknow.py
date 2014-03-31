@@ -78,8 +78,8 @@ class DYKReport(BorgInit):
             self.cursor.execute("SELECT * FROM did_you_know")
             data = self.cursor.fetchall()
             for item in data:
-                if data["name"] in templates:
-                    templates.remove(data["name"])
+                if item["name"] in templates:
+                    templates.remove(item["name"])
                     rows -= 1
                 else:
                     continue

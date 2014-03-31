@@ -23,7 +23,7 @@ class DYKReport(BorgInit):
             timestamp VARCHAR(255)
         )
     """
-    insert_query = """
+    insert_query = u"""
         INSERT INTO did_you_know (
         name, to_be_handled, creator, nominator, timestamp)
         VALUES (?, ?, ?, ?, ?)
@@ -110,17 +110,17 @@ class DYKReport(BorgInit):
                 print "C"
                 continue
             values = {
-                "name":template.encode("utf8"),
-                "creator":a["user"].encode("utf8"),
-                "nominator":d["user"].encode("utf8"),
-                "timestamp":a["timestamp"].encode("utf8"),
+                "name":unicode(template),
+                "creator":unicode(a["user"]),
+                "nominator":unicode(d["user"]),
+                "timestamp":unicode(a["timestamp"]),
                 "to_be_handled":0
             }
             print "D"
             if a["user"].lower() != d["user"].lower():
                 values["to_be_handled"] = 1
             print values
-            self.cursor.execute(self.insert_query.encode("utf8"), (
+            self.cursor.execute(self.insert_query, (
                 values["name"], 
                 values["to_be_handled"], 
                 values["creator"], 

@@ -80,7 +80,6 @@ class DYKReport(BorgInit):
             for item in data:
                 if item["name"] in templates:
                     templates.remove(item["name"])
-                    rows -= 1
                 else:
                     continue
             self._handle_sql_query(templates=templates)

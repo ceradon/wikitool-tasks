@@ -126,7 +126,7 @@ class DYKReport(BorgInit):
                 continue
             user_talk = user.getTalkPage(check=True)
             text = user_talk.getWikiText()
-            message = "\n==Message from Cerabot==\n" +
+            message = "\n==Message from Cerabot==\n" \
                     "{{SUBST:User:Cerabot/Umbox|article=%s|" \
                     "include_links=yes}}"
             newtext = text + message

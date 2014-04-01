@@ -134,7 +134,7 @@ class DYKReport(BorgInit):
             message = "\n==Message from Cerabot==\n" \
                     "{{SUBST:User:Cerabot/Umbox|article=%s|" \
                     "include_links=yes}}" % title.split("/")[1]
-            newtext = text + message
+            newtext = text + "{" + message + "}"
             summary = "Notifying [[User:{0}|{0}]] of [[{1}|Did you " \
                 "know nomination]] ([[User:Cerabot/Run/Task 2|" \
                 "bot task]])".format(user.name, user_talk.title)

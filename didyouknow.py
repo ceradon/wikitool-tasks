@@ -60,6 +60,7 @@ class DYKReport(BorgInit):
         cursor.execute(self.create_query)
         cursor.execute("SELECT COUNT(*) FROM did_you_know")
         if cursor.fetchone()["COUNT(*)"] >= 1:
+            print "A"
             templates = self.templates
             cursor.execute("SELECT * FROM did_you_know")
             data = cursor.fetchall()
@@ -71,14 +72,17 @@ class DYKReport(BorgInit):
             self._handle_sql_query(cursor, templates=templates)
             return True
         else:
+            print "B"
             self._handle_sql_query(cursor, templates=self.templates)
             return True
 
     def _handle_sql_query(self, cursor, templates=None):
         q = []
         for template in templates:
+            print "C"
             dyk, article = (Page(self._site, title=template), Page(
                 self._site, title=template.split("/")[1]))
+            print dyk, article
             categories = dyk.getCategories()
             s = " ".join(categories)
             result = findall("Category:Passed DYK nominations from", s)

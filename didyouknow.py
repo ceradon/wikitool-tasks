@@ -5,6 +5,7 @@ from borg import BorgInit
 import oursql
 from wikitools.wiki import Wiki
 from wikitools.page import Page
+from wikitools.user import User
 import mwparserfromhell as Parser
 
 class DYKReport(BorgInit):
@@ -36,16 +37,12 @@ class DYKReport(BorgInit):
         user = "Cerabot"
         passw = BorgInit().pass_retrieve()
 
-        self.cursor = None
-        self.conn = None
-
         self._site.login(user, passw)
 
         del user; del passw
 
-    def _process_page(self, page="Template talk:Did you know", 
-            host="tools-db", database=""):
-        dyk = Page(self._site, title=page)
+    def _process_page(self, cursor):
+        dyk = Page(self._site, title="Template talk:Did you know")
         text = dyk.getWikiText()
         text = text.decode("utf-8")
         parsed = Parser.parse(text)
@@ -60,32 +57,21 @@ class DYKReport(BorgInit):
             else:
                 continue
 
-        error = "Couldn't connect to database. oursql threw error: {0}."
-        login = BorgInit().database_retrieve()
-        database = database if database else login[0] + "_cerabot"
-        try:
-            self.conn = oursql.connect(host=host, db=database, 
-                user=login[0], passwd=login[1])
-            self.cursor = self.conn.cursor(oursql.DictCursor)
-        except Exception, e:
-            e = error.format(e)
-            print e
-            return False
-        self.cursor.execute(self.create_query)
-        self.cursor.execute("SELECT COUNT(*) FROM did_you_know")
-        if self.cursor.fetchone()["COUNT(*)"] >= 1:
+        cursor.execute(self.create_query)
+        cursor.execute("SELECT COUNT(*) FROM did_you_know")
+        if cursor.fetchone()["COUNT(*)"] >= 1:
             templates = self.templates
-            self.cursor.execute("SELECT * FROM did_you_know")
-            data = self.cursor.fetchall()
+            cursor.execute("SELECT * FROM did_you_know")
+            data = cursor.fetchall()
             for item in data:
                 if item["name"] in templates:
                     templates.remove(item["name"])
                 else:
                     continue
-            self._handle_sql_query(templates=templates)
+            self._handle_sql_query(templates=templates, cursor)
             return True
         else:
-            self._handle_sql_query(templates=self.templates)
+            self._handle_sql_query(templates=self.templates, cursor)
             return True
 
     def _handle_sql_query(self, templates=None):
@@ -99,7 +85,6 @@ class DYKReport(BorgInit):
             if result:
                 continue
             try:
-                print "B"
                 a = article.getHistory(direction="newer", content=False, 
                     limit=1)[0]
                 d = dyk.getHistory(direction="newer", content=False, 
@@ -114,22 +99,54 @@ class DYKReport(BorgInit):
                 "timestamp":unicode(a["timestamp"]),
                 "to_be_handled":0
             }
-            print "D"
             if a["user"].lower() != d["user"].lower():
                 values["to_be_handled"] = 1
-            print values
-            self.cursor.execute(self.insert_query, (
+            cursor.execute(self.insert_query, (
                 values["name"], 
                 values["to_be_handled"], 
                 values["creator"], 
                 values["nominator"],
                 values["timestamp"]
             ))
-        self.conn.commit()
 
-    def _handle_page(self, page):
-        pass
+    def _handle_page(self, page, cursor):
+        cursor.execute("""SELECT name, creator FROM did_you_know 
+                          WHERE to_be_handled = 1;
+                       """)
+        data = cursor.fetchall()
+        for item in data:
+            title = item["name"]
+            creator = item["creator"]
+            user = User(self._site, creator, check=True)
+            if not user.exists:
+                continue
+            if user.isBlocked():
+                continue
+            if user.isIP:
+                continue
+            user_talk = user.getTalkPage(check=True)
+            text = user_talk.getWikiText()
+            message = "\n==Message from Cerabot==\n" +
+                    "{{SUBST:Cerabot/Umbox|article=%s|include_links=yes}}"
+            newtext = text + message
+            summary = "Notifying [[User:{0}|{0}]] of [[{1}|Did you " +
+                "know nomination]] ([[User:Cerabot/Run/Task 2]]|" +
+                "bot task]])"
+            user_text.edit(text=newtext, summary=summary, bot=True,
+                minor=True)
+
+    def deploy_task(self, database):
+        error = "Couldn't connect to database. oursql threw error: {0}."
+        login = BorgInit().database_retrieve()
+        database = database if database else login[0] + "_cerabot"
+        try:
+            conn = oursql.connect(host=host, db=database, 
+                user=login[0], passwd=login[1])
+            cursor = conn.cursor(oursql.DictCursor)
+        except Exception, e:
+            e = error.format(e)
+            print e
+            return False
 
 if __name__ == "__main__":
-    test = DYKReport()
-    test._process_page()
+    print "Troll."

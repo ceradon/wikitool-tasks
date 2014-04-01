@@ -136,8 +136,8 @@ class DYKReport(BorgInit):
                     "include_links=yes}}"
             newtext = text + message
             summary = "Notifying [[User:{0}|{0}]] of [[{1}|Did you " \
-                "know nomination]] ([[User:Cerabot/Run/Task 2]]|" \
-                "bot task]])"
+                "know nomination]] ([[User:Cerabot/Run/Task 2|" \
+                "bot task]])".format(user.name, user_talk.title)
             check_page = Page(self._site, "User:Cerabot/Run/Task 2")
             check_text = check_page.getWikiText()
             if not check_text.strip().lower() == "yes":

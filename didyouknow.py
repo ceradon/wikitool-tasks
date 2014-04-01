@@ -157,7 +157,7 @@ class DYKReport(BorgInit):
         return
 
     def _database_cleanup(self, cursor):
-        for dyk in self.to_be_removed
+        pass
 
     def deploy_task(self, database="", host="tools-db"):
         error = "Couldn't connect to database. oursql threw error: {0}."

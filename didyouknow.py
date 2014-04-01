@@ -89,8 +89,8 @@ class DYKReport(BorgInit):
                     limit=1)[0]
                 d = dyk.getHistory(direction="newer", content=False, 
                     limit=1)[0]
-            except Exception:
-                print "C"
+            except Exception, e:
+                print e
                 continue
             values = {
                 "name":unicode(template),
@@ -117,7 +117,8 @@ class DYKReport(BorgInit):
         for item in data:
             title = item["name"]
             creator = item["creator"]
-            user = User(self._site, creator, check=True)
+#           user = User(self._site, creator, check=True)
+            user = User(self._site, "Ceradon", check=True)
             if not user.exists:
                 continue
             if user.isBlocked():
@@ -137,7 +138,7 @@ class DYKReport(BorgInit):
             check_text = check_page.getWikiText()
             if not check_text.strip().lower() == "yes":
                 return
-            user_text.edit(text=newtext, summary=summary, bot=True,
+            user_talk.edit(text=newtext, summary=summary, bot=True,
                 minor=True)
             print "I'm done"; exit() # Only do one page for now
         return

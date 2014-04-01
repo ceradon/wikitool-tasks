@@ -127,7 +127,8 @@ class DYKReport(BorgInit):
             user_talk = user.getTalkPage(check=True)
             text = user_talk.getWikiText()
             message = "\n==Message from Cerabot==\n" +
-                    "{{SUBST:Cerabot/Umbox|article=%s|include_links=yes}}"
+                    "{{SUBST:User:Cerabot/Umbox|article=%s|" +
+                    "include_links=yes}}"
             newtext = text + message
             summary = "Notifying [[User:{0}|{0}]] of [[{1}|Did you " +
                 "know nomination]] ([[User:Cerabot/Run/Task 2]]|" +

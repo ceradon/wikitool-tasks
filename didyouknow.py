@@ -109,7 +109,7 @@ class DYKReport(BorgInit):
                 values["timestamp"]
             ))
 
-    def _handle_page(self, page, cursor):
+    def _handle_pages(self, cursor):
         cursor.execute("""SELECT name, creator FROM did_you_know 
                           WHERE to_be_handled = 1;
                        """)
@@ -139,6 +139,11 @@ class DYKReport(BorgInit):
                 return
             user_text.edit(text=newtext, summary=summary, bot=True,
                 minor=True)
+            print "I'm done"; exit() # Only do one page for now
+        return
+
+    def _database_cleanup(self, cursor):
+        pass
 
     def deploy_task(self, database):
         error = "Couldn't connect to database. oursql threw error: {0}."
@@ -152,6 +157,9 @@ class DYKReport(BorgInit):
             e = error.format(e)
             print e
             return False
+        self._process_page(cursor)
+        self._handle_pages(cursor)
+        self._database_cleanup(cursor)
 
 if __name__ == "__main__":
     print "Troll."

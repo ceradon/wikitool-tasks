@@ -133,6 +133,10 @@ class DYKReport(BorgInit):
             summary = "Notifying [[User:{0}|{0}]] of [[{1}|Did you " +
                 "know nomination]] ([[User:Cerabot/Run/Task 2]]|" +
                 "bot task]])"
+            check_page = Page(self._site, "User:Cerabot/Run/Task 2")
+            check_text = check_page.getWikiText()
+            if not check_text.strip().lower() == "yes":
+                return
             user_text.edit(text=newtext, summary=summary, bot=True,
                 minor=True)
 

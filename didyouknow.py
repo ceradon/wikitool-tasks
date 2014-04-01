@@ -162,7 +162,7 @@ class DYKReport(BorgInit):
             e = error.format(e)
             print e
             return False
-        self._process_page(cursor)
+#       self._process_page(cursor)
         self._handle_pages(cursor)
         self._database_cleanup(cursor)
 

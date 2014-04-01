@@ -39,6 +39,9 @@ class DYKReport(BorgInit):
 
         self._site.login(user, passw)
 
+        self.to_be_removed = []
+        self.to_be_added = []
+
         del user; del passw
 
     def _process_page(self, cursor):
@@ -69,7 +72,11 @@ class DYKReport(BorgInit):
                     templates.remove(item["name"])
                 else:
                     continue
-            self._handle_sql_query(cursor, templates=templates)
+            try:
+                self._handle_sql_query(cursor, templates=templates)
+            except Exception, e:
+                print "self._handle_sql_query() thre exception: " + e
+                return False
             return True
         else:
             print "B"
@@ -85,8 +92,10 @@ class DYKReport(BorgInit):
             print dyk, article
             categories = dyk.getCategories()
             s = " ".join(categories)
-            result = findall("Category:Passed DYK nominations from", s)
-            if result:
+            passed = findall("Category:Passed DYK nominations from", s)
+            failed = findall("Category:Failed DYK nominations from", s)
+            if passed or failed:
+                self.to_be_removed.append(dyk)
                 continue
             try:
                 a = article.getHistory(direction="newer", content=False, 
@@ -148,7 +157,7 @@ class DYKReport(BorgInit):
         return
 
     def _database_cleanup(self, cursor):
-        pass
+        for dyk in self.to_be_removed
 
     def deploy_task(self, database="", host="tools-db"):
         error = "Couldn't connect to database. oursql threw error: {0}."

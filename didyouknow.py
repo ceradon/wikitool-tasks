@@ -74,7 +74,7 @@ class DYKReport(BorgInit):
             self._handle_sql_query(cursor, templates=self.templates)
             return True
 
-    def _handle_sql_query(self, templates=None, cursor):
+    def _handle_sql_query(self, cursor, templates=None):
         q = []
         for template in templates:
             dyk, article = (Page(self._site, title=template), Page(

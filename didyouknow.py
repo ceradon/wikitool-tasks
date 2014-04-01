@@ -145,7 +145,7 @@ class DYKReport(BorgInit):
     def _database_cleanup(self, cursor):
         pass
 
-    def deploy_task(self, database):
+    def deploy_task(self, database=""):
         error = "Couldn't connect to database. oursql threw error: {0}."
         login = BorgInit().database_retrieve()
         database = database if database else login[0] + "_cerabot"

@@ -162,4 +162,5 @@ class DYKReport(BorgInit):
         self._database_cleanup(cursor)
 
 if __name__ == "__main__":
-    print "Troll."
+    task = DYKReport()
+    task.deploy_task()

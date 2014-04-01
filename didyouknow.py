@@ -68,13 +68,13 @@ class DYKReport(BorgInit):
                     templates.remove(item["name"])
                 else:
                     continue
-            self._handle_sql_query(templates=templates, cursor)
+            self._handle_sql_query(cursor, templates=templates)
             return True
         else:
-            self._handle_sql_query(templates=self.templates, cursor)
+            self._handle_sql_query(cursor, templates=self.templates)
             return True
 
-    def _handle_sql_query(self, templates=None):
+    def _handle_sql_query(self, templates=None, cursor):
         q = []
         for template in templates:
             dyk, article = (Page(self._site, title=template), Page(

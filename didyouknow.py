@@ -29,6 +29,9 @@ class DYKReport(BorgInit):
         name, to_be_handled, creator, nominator, timestamp)
         VALUES (?, ?, ?, ?, ?)
     """
+    delete_query = u"""
+        DELETE FROM did_you_know WHERE name in ({0})
+    """
     templates = []
 
     def __init__(self):
@@ -75,7 +78,7 @@ class DYKReport(BorgInit):
             try:
                 self._handle_sql_query(cursor, templates=templates)
             except Exception, e:
-                print "self._handle_sql_query() thre exception: " + e
+                print "self._handle_sql_query() threw exception: " + e
                 return False
             return True
         else:
@@ -121,6 +124,9 @@ class DYKReport(BorgInit):
                 values["nominator"],
                 values["timestamp"]
             ))
+            delete_string = ", ".join(self.to_be_removed)
+            cursor.execute(self.delete_query.format(delete_string))
+        return 1
 
     def _handle_pages(self, cursor):
         cursor.execute("""SELECT name, creator FROM did_you_know 
@@ -146,7 +152,7 @@ class DYKReport(BorgInit):
             newtext = text + message + "}}"
             summary = "Notifying [[User:{0}|{0}]] of [[{1}|Did you " \
                 "know nomination]] ([[User:Cerabot/Run/Task 2|" \
-                "bot task]])".format(user.name, title)
+                "bot]])".format(user.name, title)
             check_page = Page(self._site, "User:Cerabot/Run/Task 2")
             check_text = check_page.getWikiText()
             if not check_text.strip().lower() == "yes":
@@ -157,7 +163,18 @@ class DYKReport(BorgInit):
         return
 
     def _database_cleanup(self, cursor):
-        pass
+        
+        dyk = Page(self._site, title="Template talk:Did you know")
+        text = dyk.getWikiText()
+        text = text.decode("utf-8")
+        parsed = Parser.parse(text)
+        for name in parsed.filter_templates():
+            name = unicode(name)
+            if name.startswith("{{Template:Did you know nominations") \
+                or name.startswith("{{Did you know nominations"):
+                name = unicode(name).replace("{{", "Template:").replace(
+                    "}}", "")
+                name = name.replace("Template:Template:", "Template:")
 
     def deploy_task(self, database="", host="tools-db"):
         error = "Couldn't connect to database. oursql threw error: {0}."
@@ -171,7 +188,7 @@ class DYKReport(BorgInit):
             e = error.format(e)
             print e
             return False
-#       self._process_page(cursor)
+        self._process_page(cursor)
         self._handle_pages(cursor)
         self._database_cleanup(cursor)
 
